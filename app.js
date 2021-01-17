@@ -1,19 +1,12 @@
 
-// var v3 = require('node-hue-api').v3, 
-// host = options.hueBridgeIp,
-// username = options.hueUser,
-// lightsOffTimeout = null,
-// lightsOffTimedTimeout = null,
-// GroupLightState = v3.model.lightStates.GroupLightState;
+const options = require('./settings/options.js');
 
-const express = require('express')
-const app = express()
-const port = 3000
+var log4js = require('log4js');
+var logger = log4js.getLogger();
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-});
+const express = require('express');
+const app = express();
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-});
+
+require('./routes.js')(app, logger);
+
