@@ -10,32 +10,20 @@ module.exports = function(logger) {
 	var api = null;
     (async function() {
         api = await v3.api.createLocal(host).connect(username);
-
-        api.groups.getAll()
-            .then(allGroups => {
-            // Display the groups from the bridge
-            allGroups.forEach(group => {
-				console.log('done loading');
-            // console.log(group.toStringDetailed());
-            });
-        });
-
-		
     })();
 
 	async function temporarilyDisableMotionSensorFor(hours){
-		var sensorConfig = {
-            "on": false,
-            "battery": 29,
-            "alert": "none",
-            "reachable": true,
-            "sensitivity": 2,
-            "sensitivitymax": 2
-        };
+		await toggleSensor(false);
+		clearTimeout(motionSensorTimeout);
+		motionSensorTimeout = setTimeout(async ()=>{
+			await toggleSensor(true);
+		}, hours * 60 * 60 * 1000);
+	}
 
+	async function toggleSensor(enable){
 		api.sensors.getSensor(9)
         .then(sensor => {
-			sensor.on = true;
+			sensor.on = enable;
 			sensor.battery = null;
 			sensor.sensitivitymax = null;
 
@@ -43,7 +31,6 @@ module.exports = function(logger) {
 			.then(result => {
 				console.log(`Updated sensor config? ${result}`);
 			})
-			res.send(sensor.toStringDetailed());
         });
 
 	}

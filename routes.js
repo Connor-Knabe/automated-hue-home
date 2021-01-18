@@ -9,10 +9,9 @@ module.exports = function(app, logger) {
     });
 
     app.get('/disableSensors', (req,res) => {
-        hue.disableMotionSensors(res);
-
+        hue.temporarilyDisableMotionSensorFor(2);
       
-        // res.send("Yep");
+        res.send("Yep");
     });
     
     app.listen(port, () => {
