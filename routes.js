@@ -1,7 +1,7 @@
 const port = 3000;
 const hue = require('./services/hue.js');
 
-module.exports = function(app, logger) {
+module.exports = function(app, logger, options) {
     const hue = require('./services/hue.js')(logger);
 
     app.get('/', (req, res) => {
@@ -9,7 +9,7 @@ module.exports = function(app, logger) {
     });
 
     app.get('/disableSensors', (req,res) => {
-        hue.temporarilyDisableMotionSensorFor(2);
+        hue.temporarilyDisableMotionSensorFor(options.disableSensorHours);
       
         res.send("Yep");
     });
