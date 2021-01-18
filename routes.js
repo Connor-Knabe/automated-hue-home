@@ -8,9 +8,11 @@ module.exports = function(app, logger) {
         res.send('Hello World!')
     });
 
-    app.post('/disableSchedule', (req,res) => {
+    app.get('/disableSensors', (req,res) => {
+        hue.disableMotionSensors(res);
 
-
+      
+        // res.send("Yep");
     });
     
     app.listen(port, () => {

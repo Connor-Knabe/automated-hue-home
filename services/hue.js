@@ -15,21 +15,44 @@ module.exports = function(logger) {
             .then(allGroups => {
             // Display the groups from the bridge
             allGroups.forEach(group => {
-            console.log(group.toStringDetailed());
+				console.log('done loading');
+            // console.log(group.toStringDetailed());
             });
         });
 
-		api.sensors.getAll()
-			.then(allSensors => {
-				// Display the details of the sensors we got back
-				console.log(JSON.stringify(allSensors, null, 2));
-			})
-			;
+		
     })();
 
-	function disableMotionSensors(){
+	async function disableMotionSensors(res){
 
 
+		var sensorConfig = {
+            "on": false,
+            "battery": 29,
+            "alert": "none",
+            "reachable": true,
+            "sensitivity": 2,
+            "sensitivitymax": 2
+        };
+
+		// api.sensors.updateSensorConfig(sensorConfig)
+		// .then(result => {
+		//   console.log(`Updated sensor config? ${result}`);
+		// })
+
+		api.sensors.getSensor(9)
+        .then(sensor => {
+
+			console.log('sensor', sensor);
+			// sensor._data.config.on = false;
+			console.log(sensor);
+			sensor.on = false;
+			api.sensors.updateSensorConfig(sensor)
+			.then(result => {
+				console.log(`Updated sensor config? ${result}`);
+			})
+			res.send(sensor.toStringDetailed());
+        });
 
 	}
     
