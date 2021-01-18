@@ -3,7 +3,7 @@ var v3 = require('node-hue-api').v3,
 host = options.hueBridgeIp,
 username = options.hueUser;
 
-GroupLightState = v3.model.lightStates.GroupLightState;
+var motionSensorTimeout = null;
 
 module.exports = function(logger) {
 
@@ -23,9 +23,7 @@ module.exports = function(logger) {
 		
     })();
 
-	async function disableMotionSensors(res){
-
-
+	async function temporarilyDisableMotionSensorFor(hours){
 		var sensorConfig = {
             "on": false,
             "battery": 29,
@@ -35,18 +33,12 @@ module.exports = function(logger) {
             "sensitivitymax": 2
         };
 
-		// api.sensors.updateSensorConfig(sensorConfig)
-		// .then(result => {
-		//   console.log(`Updated sensor config? ${result}`);
-		// })
-
 		api.sensors.getSensor(9)
         .then(sensor => {
+			sensor.on = true;
+			sensor.battery = null;
+			sensor.sensitivitymax = null;
 
-			console.log('sensor', sensor);
-			// sensor._data.config.on = false;
-			console.log(sensor);
-			sensor.on = false;
 			api.sensors.updateSensorConfig(sensor)
 			.then(result => {
 				console.log(`Updated sensor config? ${result}`);
@@ -57,7 +49,7 @@ module.exports = function(logger) {
 	}
     
 	return {
-		disableMotionSensors:disableMotionSensors
+		temporarilyDisableMotionSensorFor:temporarilyDisableMotionSensorFor
 	};
 
 };
