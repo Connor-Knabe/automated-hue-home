@@ -11,11 +11,10 @@ module.exports = function(logger) {
 	var api = null;
     (async function() {
         api = await v3.api.createLocal(host).connect(username);
-		await temporarilyDisableSchedule(2)
     })();
 
 
-	async function temporarilyDisableSchedule(hours){
+	async function temporarilyDisableScheduleFor(hours){
 		
 		  await toggleSchedule(false);
 		  clearTimeout(scheduleTimeout);
@@ -57,7 +56,10 @@ module.exports = function(logger) {
 	}
     
 	return {
-		temporarilyDisableMotionSensorFor:temporarilyDisableMotionSensorFor
+		temporarilyDisableMotionSensorFor:temporarilyDisableMotionSensorFor,
+		temporarilyDisableScheduleFor:temporarilyDisableScheduleFor,
+		toggleSensor:toggleSensor,
+		toggleSchedule:toggleSchedule
 	};
 
 };

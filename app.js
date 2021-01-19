@@ -8,5 +8,5 @@ logger.level = 'debug';
 const express = require('express');
 const app = express();
 
-require('./routes.js')(app, logger);
+require('./routes.js')(app, logger, options);
 

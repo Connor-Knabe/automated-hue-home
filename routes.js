@@ -8,15 +8,30 @@ module.exports = function(app, logger, options) {
         res.send('Hello World!')
     });
 
-    app.get('/disableSensors', (req,res) => {
+    app.post('/disableSensors', (req,res) => {
         hue.temporarilyDisableMotionSensorFor(options.disableSensorHours);
-      
-        res.send("Yep");
+        res.send("200");
+    });
+
+    app.post('/disableSchedules', (req,res) => {
+        hue.temporarilyDisableScheduleFor(options.disableScheduleHours)
+        res.send("200");
+    });
+
+    app.post('/disableSchedulesAndSensors', (req,res)=>{
+        hue.temporarilyDisableMotionSensorFor(options.disableSensorHours);
+        hue.temporarilyDisableScheduleFor(options.disableScheduleHours);
+        res.send("200");
+    });
+
+    app.post('/enableSchedulesAndSensors', (req,res)=>{
+        hue.toggleSchedule(true);
+        hue.toggleSensor(true);
+        res.send("200");
     });
     
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`)
     });
-
 
 };
