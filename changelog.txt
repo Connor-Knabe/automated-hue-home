@@ -1,2 +1,3 @@
+v0.0.3 - disabling schedule for x time
 v0.0.2 - disables sensors for x time
 v0.0.1 - init
