@@ -4,13 +4,17 @@ host = options.hueBridgeIp,
 username = options.hueUser;
 
 var motionSensorTimeout = null,
-	scheduleTimeout = null;
+	scheduleTimeout = null,
+	sensorEnabled = true,
+	scheduleEnabled = true;
 
 module.exports = function(logger) {
 
 	var api = null;
     (async function() {
         api = await v3.api.createLocal(host).connect(username);
+		await getSensorScheduleStatus();
+
     })();
 
 
@@ -28,6 +32,7 @@ module.exports = function(logger) {
 		mySchedule.status = enable ? 'enabled' : 'disabled';
 		api.schedules.updateSchedule(mySchedule)
 		  .then(updateResult => {
+			scheduleEnabled = enable;
 			logger.debug(`Updated Schedule ${JSON.stringify(updateResult)}`); 
 		  });
 	}
@@ -43,6 +48,7 @@ module.exports = function(logger) {
 	async function toggleSensor(enable){
 		api.sensors.getSensor(9)
         .then(sensor => {
+			sensorEnabled = enable;
 			sensor.on = enable;
 			sensor.battery = null;
 			sensor.sensitivitymax = null;
@@ -52,14 +58,28 @@ module.exports = function(logger) {
 				logger.debug(`Updated sensor config? ${result}`);
 			})
         });
+	}
 
+	async function getSensorScheduleStatus(){
+		var sensorEnabled = false;
+		await api.sensors.getSensor(9)
+			.then(sensor => {
+				sensorEnabled = sensor.on;
+			});
+		const mySchedule = await api.schedules.getSchedule(2);
+		var scheduleEnabled = mySchedule.status == "enabled";
+
+		logger.debug(scheduleEnabled)
+
+		return scheduleEnabled || sensorEnabled;		 
 	}
     
 	return {
 		temporarilyDisableMotionSensorFor:temporarilyDisableMotionSensorFor,
 		temporarilyDisableScheduleFor:temporarilyDisableScheduleFor,
 		toggleSensor:toggleSensor,
-		toggleSchedule:toggleSchedule
+		toggleSchedule:toggleSchedule,
+		getSensorScheduleStatus:getSensorScheduleStatus
 	};
 
 };

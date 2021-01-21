@@ -8,6 +8,11 @@ module.exports = function(app, logger, options) {
         res.send('Hello World!')
     });
 
+    app.get('/sensorScheduleStatus', (req, res) => {
+        res.send(hue.getSensorScheduleStatus());
+    });
+
+
     app.post('/disableSensors', (req,res) => {
         hue.temporarilyDisableMotionSensorFor(options.disableSensorHours);
         res.send("200");
