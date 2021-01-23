@@ -8,8 +8,9 @@ module.exports = function(app, logger, options) {
         res.send('Hello World!')
     });
 
-    app.get('/sensorScheduleStatus', (req, res) => {
-        res.send(hue.getSensorScheduleStatus());
+    app.get('/sensorScheduleStatus', async (req, res) => {
+        var status = await hue.getSensorScheduleStatus();
+        res.send(status);
     });
 
 
