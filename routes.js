@@ -13,7 +13,6 @@ module.exports = function(app, logger, options) {
         res.send(status);
     });
 
-
     app.post('/disableSensors', (req,res) => {
         hue.temporarilyDisableMotionSensorFor(options.disableSensorHours);
         res.send("200");
