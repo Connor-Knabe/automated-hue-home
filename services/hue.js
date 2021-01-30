@@ -9,7 +9,10 @@ var motionSensorTimeout = null,
 	scheduleEnabled = true;
 
 module.exports = function(logger) {
-
+	//on start turn on schedule and sensor
+	
+	toggleSchedule(true);
+	toggleSensor(true);
 	var api = null;
     (async function() {
         api = await v3.api.createLocal(host).connect(username);
