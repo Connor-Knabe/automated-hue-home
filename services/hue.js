@@ -6,7 +6,8 @@ username = options.hueUser;
 var motionSensorTimeout = null,
 	scheduleTimeout = null,
 	sensorEnabled = true,
-	scheduleEnabled = true;
+	scheduleEnabled = true,
+	timerEndDate = null;
 
 module.exports = function(logger) {
 	//on start turn on schedule and sensor
@@ -25,6 +26,7 @@ module.exports = function(logger) {
 		
 		  await toggleSchedule(false);
 		  clearTimeout(scheduleTimeout);
+
 		  scheduleTimeout = setTimeout(async ()=>{
 			  await toggleSchedule(true);
 		  }, hours * 60 * 60 * 1000);
@@ -43,8 +45,10 @@ module.exports = function(logger) {
 	async function temporarilyDisableMotionSensorFor(hours){
 		await toggleSensor(false);
 		clearTimeout(motionSensorTimeout);
+		timerEndDate = new Date();
 		motionSensorTimeout = setTimeout(async ()=>{
 			await toggleSensor(true);
+			timerEndDate = null;
 		}, hours * 60 * 60 * 1000);
 	}
 
@@ -74,7 +78,7 @@ module.exports = function(logger) {
 
 		logger.debug(scheduleEnabled)
 			
-		return scheduleEnabled && sensorEnabled;		 
+		return timerEndDate;		 
 	}
     
 	return {
