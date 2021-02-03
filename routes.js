@@ -27,7 +27,10 @@ module.exports = function(app, logger, options) {
     app.post('/disableSchedulesAndSensors', (req,res)=>{
         hue.temporarilyDisableMotionSensorFor(options.disableSensorHours);
         hue.temporarilyDisableScheduleFor(options.disableScheduleHours);
-        res.send("200");
+
+        var status = await hue.getSensorScheduleStatus();
+        logger.debug('sensor status', status);
+        res.send(status);
     });
 
     app.post('/enableSchedulesAndSensors', (req,res)=>{
