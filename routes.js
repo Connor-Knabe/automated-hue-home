@@ -10,6 +10,7 @@ module.exports = function(app, logger, options) {
 
     app.get('/sensorScheduleStatus', async (req, res) => {
         var status = await hue.getSensorScheduleStatus();
+        logger.debug('sensor status', status);
         res.send(status);
     });
 

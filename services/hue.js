@@ -12,13 +12,14 @@ var motionSensorTimeout = null,
 module.exports = function(logger) {
 	//on start turn on schedule and sensor
 	
-	toggleSchedule(true);
-	toggleSensor(true);
+
 	var api = null;
     (async function() {
         api = await v3.api.createLocal(host).connect(username);
 		await getSensorScheduleStatus();
-
+		toggleSchedule(true);
+		toggleSensor(true);
+		await getSensorScheduleStatus();
     })();
 
 
@@ -46,6 +47,8 @@ module.exports = function(logger) {
 		await toggleSensor(false);
 		clearTimeout(motionSensorTimeout);
 		timerEndDate = new Date();
+		timerEndDate.setHours(timerEndDate.getHours() + hours);
+
 		motionSensorTimeout = setTimeout(async ()=>{
 			await toggleSensor(true);
 			timerEndDate = null;
