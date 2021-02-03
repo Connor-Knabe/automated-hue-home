@@ -80,7 +80,9 @@ module.exports = function(logger) {
 		var scheduleEnabled = mySchedule.status == "enabled";
 
 		logger.debug(scheduleEnabled)
-			
+		if(timerEndDate){
+			timerEndDate = timerEndDate.toString();
+		}
 		return timerEndDate;		 
 	}
     
