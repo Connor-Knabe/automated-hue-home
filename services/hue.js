@@ -34,6 +34,11 @@ module.exports = function(logger) {
 	}
 
 	async function toggleSchedule(enable){
+		if(enable){
+			timerEndDate = null;
+			clearTimeout(motionSensorTimeout);
+			clearTimeout(scheduleTimeout);
+		}
 		const mySchedule = await api.schedules.getSchedule(2);
 		mySchedule.status = enable ? 'enabled' : 'disabled';
 		api.schedules.updateSchedule(mySchedule)
