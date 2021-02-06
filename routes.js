@@ -38,6 +38,12 @@ module.exports = function(app, logger, options) {
         hue.toggleSensor(true);
         res.send("200");
     });
+
+    app.get('/sensors', async (req,res)=>{
+        var status = await hue.getSensorData();
+        logger.debug('sensor data', status);
+        res.send(status);
+    });
     
     app.listen(port, () => {
         console.log(`Example app listening at http://localhost:${port}`)
