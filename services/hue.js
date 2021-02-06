@@ -20,7 +20,7 @@ module.exports = function(logger) {
 		toggleSchedule(true);
 		toggleSensor(true);
 		await getSensorScheduleStatus();
-		getSensorBatteryData();
+		getSensorData();
     })();
 
 
@@ -94,16 +94,23 @@ module.exports = function(logger) {
     
 
 
-	async function getSensorBatteryData(){
-
+	async function getSensorData(){
+		var sensors = [];
 		api.sensors.getAll()
 		.then(allSensors => {
 			// Display the details of the sensors we got back
 			allSensors.forEach(sensor => {
 				if(sensor._data.productname == "Hue motion sensor"){
-					console.log('Sensors', sensor._data.name, sensor._data.config.battery, sensor._data.id);
+					var sensorData = {
+						name: sensor._data.name,
+						battery:sensor._data.config.battery,
+						reachable: sensor._data.config.reachable,
+						on: sensor._data.config.on
+					}
+					sensors.push(sensorData);
 				}
 			});
+			return sensors;
 		});
 
 	}
