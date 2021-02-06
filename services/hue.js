@@ -20,7 +20,7 @@ module.exports = function(logger) {
 		toggleSchedule(true);
 		toggleSensor(true);
 		await getSensorScheduleStatus();
-		getSensorData();
+		await getSensorData();
     })();
 
 
@@ -96,7 +96,7 @@ module.exports = function(logger) {
 
 	async function getSensorData(){
 		var sensors = [];
-		api.sensors.getAll()
+		await api.sensors.getAll()
 		.then(allSensors => {
 			// Display the details of the sensors we got back
 			allSensors.forEach(sensor => {
@@ -110,9 +110,11 @@ module.exports = function(logger) {
 					sensors.push(sensorData);
 				}
 			});
-			return sensors;
+			console.log(sensors);
+		}).catch(err => {
+			console.log('err getting sensor data',err);
 		});
-
+		return sensors;
 	}
 
 	return {
@@ -120,7 +122,8 @@ module.exports = function(logger) {
 		temporarilyDisableScheduleFor:temporarilyDisableScheduleFor,
 		toggleSensor:toggleSensor,
 		toggleSchedule:toggleSchedule,
-		getSensorScheduleStatus:getSensorScheduleStatus
+		getSensorScheduleStatus:getSensorScheduleStatus,
+		getSensorData:getSensorData
 	};
 
 };
