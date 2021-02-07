@@ -9,4 +9,5 @@ const express = require('express');
 const app = express();
 
 require('./routes.js')(app, logger, options);
+require('./services/cron.js')(logger,options);
 
