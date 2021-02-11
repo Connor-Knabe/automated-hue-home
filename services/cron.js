@@ -1,15 +1,27 @@
 const options = require('../settings/options.js');
-const messgener = require('./messenger.js');
+const messenger = require('./messenger.js');
 var CronJob = require('cron').CronJob;
 
-module.exports = function(logger) {
-	
-    var job = new cron(
+module.exports = async function(logger,hue) {
+
+
+	setTimeout(async () => {
+		var sensorData = await hue.getSensorData();
+		sensorData.forEach(sensor => {
+			if(sensor.battery < options.batteryPercentWarning){
+				messenger.sendEmail('Battery low', sensor);
+				logger.debug('Battery low sending email', sensor);
+			}
+		});
+	}, 5000);
+
+
+    var job = new CronJob(
 		'5 5 * * *',
-		function() {
+		async function () {
 			var sensorData = await hue.getSensorData();
 			sensorData.forEach(sensor => {
-				if(sensor.battery < 10){
+				if(sensor.battery < options.batteryPercentWarning){
 					messenger.sendEmail('Battery low', sensor);
 					logger.debug('Battery low sending email', sensor);
 				}	
@@ -20,11 +32,5 @@ module.exports = function(logger) {
 		'America/Chicago'
 	);
 	job.start();
-
-
-    
-	return {
-
-	};
 
 };

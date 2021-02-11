@@ -1,8 +1,7 @@
 const port = 3000;
 const hue = require('./services/hue.js');
 
-module.exports = function(app, logger, options) {
-    const hue = require('./services/hue.js')(logger);
+module.exports = function(app, logger, options, hue) {
 
     app.get('/', (req, res) => {
         res.send('Hello World!')
