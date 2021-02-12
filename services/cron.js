@@ -1,8 +1,8 @@
 const options = require('../settings/options.js');
-const messenger = require('./messenger.js');
 var CronJob = require('cron').CronJob;
 
 module.exports = async function(logger,hue) {
+	const messenger = require('./messenger.js')(logger);
 
 
 	setTimeout(async () => {
