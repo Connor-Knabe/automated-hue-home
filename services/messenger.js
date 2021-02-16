@@ -18,7 +18,7 @@ module.exports = function(logger) {
             from: login.gmailUsername,
             to: login.alertEmail,
             subject: subject,
-            text: JSON.stringify(msgContent)
+            text: msgContent
         };
     
         transporter.sendMail(mailOptions, function(error, info) {
