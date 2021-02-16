@@ -27,7 +27,7 @@ module.exports = async function(logger,hue) {
 		}
 
     var job = new CronJob(
-		'5 5 * * 2',
+		'5 5 * * 3',
 		async function () {
 			await sendSensorEmail();
 		},
