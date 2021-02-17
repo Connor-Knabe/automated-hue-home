@@ -5,14 +5,11 @@ username = options.hueUser;
 
 var motionSensorTimeout = null,
 	scheduleTimeout = null,
-	sensorEnabled = true,
 	scheduleEnabled = true,
 	timerEndDate = null;
 
 module.exports = function(logger) {
 	//on start turn on schedule and sensor
-	
-
 	var api = null;
     (async function() {
         api = await v3.api.createLocal(host).connect(username);
@@ -25,10 +22,8 @@ module.exports = function(logger) {
 
 
 	async function temporarilyDisableScheduleFor(hours){
-		
 		  await toggleSchedule(false);
 		  clearTimeout(scheduleTimeout);
-
 		  scheduleTimeout = setTimeout(async ()=>{
 			  await toggleSchedule(true);
 		  }, hours * 60 * 60 * 1000);
@@ -64,24 +59,17 @@ module.exports = function(logger) {
 	async function toggleSensor(enable){
 		api.sensors.getSensor(9)
         .then(sensor => {
-			sensorEnabled = enable;
 			sensor.on = enable;
 			sensor.battery = null;
 			sensor.sensitivitymax = null;
-
 			api.sensors.updateSensorConfig(sensor)
 			.then(result => {
-				logger.debug(`Updated sensor config? ${result}`);
+				logger.debug(`Updated sensor config: ${result}`);
 			})
         });
 	}
 
 	async function getSensorScheduleStatus(){
-		var sensorEnabled = false;
-		await api.sensors.getSensor(9)
-			.then(sensor => {
-				sensorEnabled = sensor.on;
-			});
 		const mySchedule = await api.schedules.getSchedule(2);
 		var scheduleEnabled = mySchedule.status == "enabled";
 
@@ -110,7 +98,6 @@ module.exports = function(logger) {
 					sensors.push(sensorData);
 				}
 			});
-			console.log(sensors);
 		}).catch(err => {
 			console.log('err getting sensor data',err);
 		});

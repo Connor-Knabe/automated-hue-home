@@ -4,12 +4,6 @@ var CronJob = require('cron').CronJob;
 module.exports = async function(logger,hue) {
 	const messenger = require('./messenger.js')(logger);
 
-
-	setTimeout(async () => {
-		await sendSensorEmail();
-	}, 5000);
-
-
 	async function sendSensorEmail(){
 		var sensorData = await hue.getSensorData();
 		var sendBatteryLowEmail = false;
@@ -24,7 +18,7 @@ module.exports = async function(logger,hue) {
 			messenger.sendEmail('Battery low', sensorInfo);
 			logger.debug('Battery low sending email:', sensorInfo);
 		}
-		}
+	}
 
     var job = new CronJob(
 		'5 5 * * 3',
