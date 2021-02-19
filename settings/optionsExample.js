@@ -3,3 +3,4 @@ module.exports.hueBridgeIp = '192.168.0.31';
 module.exports.hueUser = 'alksdjflKZJDFLKJSDLKFJlkshdflkjsdf';
 module.exports.disableSensorHours = 2;
 module.exports.disableScheduleHours = 2;
+module.exports.batteryPercentWarning = 10;
