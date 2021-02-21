@@ -17,13 +17,21 @@ module.exports = async function(logger,hue) {
 			}
 		});
 		
-		// if (sendBatteryLowEmail){
-		// 	lastSensor = sensorData;
-		// 	sendBatteryLowEmail += `${sensor.name} is at ${sensor.battery}%\n`;
-		// }
+		if (sendBatteryLowEmail){
+			sendBatteryLowEmail += `${sensor.name} is at ${sensor.battery}%\n`;
+
+			lastSensor.forEach(sensor => {
+				if(sensor.battery < options.batteryPercentWarning){
+					lastSensorInfo += `${sensor.name} previously was at ${sensor.battery}%\n`;
+					sendBatteryLowEmail = true;
+				}
+			});
+			lastSensor = sensorData;
+
+		}
 
 		if(sendBatteryLowEmail){
-			messenger.sendEmail('Battery low', sensorInfo);
+			messenger.sendEmail('Battery low', sensorInfo + lastSensorInfo);
 			logger.debug('Battery low sending email:', sensorInfo);
 		}
 	}
