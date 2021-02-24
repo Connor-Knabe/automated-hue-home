@@ -7,10 +7,10 @@ module.exports = async function(logger,hue) {
 
 	setTimeout(async ()=>{
 		await sendSensorEmail();
-	},10000);
+	},25000);
 	setTimeout(async ()=>{
 		await sendSensorEmail();
-	},20000);
+	},30000);
 
 	async function sendSensorEmail(){
 		var sensorData = await hue.getSensorData();
@@ -25,8 +25,7 @@ module.exports = async function(logger,hue) {
 		});
 		
 		if (sendBatteryLowEmail){
-			sendBatteryLowEmail += `${sensor.name} is at ${sensor.battery}%\n`;
-			if(lastSensor){
+			if(lastSensor != null){
 				lastSensor.forEach(sensor => {
 					if(sensor.battery < options.batteryPercentWarning){
 						lastSensorInfo += `${sensor.name} previously was at ${sensor.battery}%\n`;
@@ -35,7 +34,6 @@ module.exports = async function(logger,hue) {
 				});
 			}
 			lastSensor = sensorData;
-
 		}
 
 		if(sendBatteryLowEmail){
