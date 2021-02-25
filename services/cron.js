@@ -15,11 +15,14 @@ module.exports = async function(logger,hue) {
 	async function sendSensorEmail(){
 		var sensorData = await hue.getSensorData();
 		var sendBatteryLowEmail = false;
+		var lowSensorInfo = "";
 		var sensorInfo = "";
 		var lastSensorInfo = "";
 		sensorData.forEach(sensor => {
+			sensorInfo += `${sensor.name} is at ${sensor.battery}%\n`;
+
 			if(sensor.battery < options.batteryPercentWarning){
-				sensorInfo += `${sensor.name} is at ${sensor.battery}%\n`;
+				lowSensorInfo += `${sensor.name} is at ${sensor.battery}%\n`;
 				sendBatteryLowEmail = true;
 			}
 		});
@@ -37,8 +40,8 @@ module.exports = async function(logger,hue) {
 		}
 
 		if(sendBatteryLowEmail){
-			messenger.sendEmail('Battery low', sensorInfo + lastSensorInfo);
-			logger.debug('Battery low sending email:', sensorInfo);
+			messenger.sendEmail('Battery low', `Sensor Info: ${sensorInfo} \nLow Sensors:${lowSensorInfo} \nLast Week Data:${lastSensorInfo}`);
+			logger.debug('Battery low sending email:', lowSensorInfo);
 		}
 	}
 

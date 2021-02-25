@@ -1,3 +1,4 @@
+v1.0.1 - logs out previous week 
 v1.0.0 - system to monitor sensor battery life
 v0.0.8 - changing the way disable schedule works, now returns date when it ends
 v0.0.3 - disabling schedule for x time
