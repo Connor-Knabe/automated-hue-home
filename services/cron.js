@@ -40,7 +40,7 @@ module.exports = async function(logger,hue) {
 		}
 
 		if(sendBatteryLowEmail){
-			messenger.sendEmail('Battery low', `Sensor Info: ${sensorInfo} \nLow Sensors:${lowSensorInfo} \nLast Week Data:${lastSensorInfo}`);
+			messenger.sendEmail('Battery low', `Sensor Info: \n${sensorInfo} \nLow Sensors:\n${lowSensorInfo} \nLast Week Data:\n${lastSensorInfo}`);
 			logger.debug('Battery low sending email:', lowSensorInfo);
 		}
 	}
