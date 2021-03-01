@@ -18,6 +18,8 @@ module.exports = async function(logger,hue) {
 		var lowSensorInfo = "";
 		var sensorInfo = "";
 		var lastSensorInfo = "";
+		var lastLowSensorInfo = "";
+
 		sensorData.forEach(sensor => {
 			sensorInfo += `${sensor.name} is at ${sensor.battery}%\n`;
 
@@ -27,21 +29,22 @@ module.exports = async function(logger,hue) {
 			}
 		});
 		
-		if (sendBatteryLowEmail){
-			if(lastSensor != null){
-				lastSensor.forEach(sensor => {
-					if(sensor.battery < options.batteryPercentWarning){
-						lastSensorInfo += `${sensor.name} previously was at ${sensor.battery}%\n`;
-						sendBatteryLowEmail = true;
-					}
-				});
-			}
-			lastSensor = sensorData;
+		if(lastSensor != null){
+			lastSensor.forEach(sensor => {
+				lastSensorInfo += `${sensor.name} is at ${sensor.battery}%\n`;
+				if(sensor.battery < options.batteryPercentWarning){
+					lastLowSensorInfo += `${sensor.name} previously was at ${sensor.battery}%\n`;
+					sendBatteryLowEmail = true;
+				}
+			});
 		}
+		lastSensor = sensorData;
+	
 
 		if(sendBatteryLowEmail){
-			messenger.sendEmail('Battery low', `Sensor Info: \n${sensorInfo} \nLow Sensors:\n${lowSensorInfo} \nLast Week Data:\n${lastSensorInfo}`);
-			logger.debug('Battery low sending email:', lowSensorInfo);
+			var emailContent = `Sensor Info: \n${sensorInfo} \nLow Sensors:\n${lowSensorInfo} \nLast Week Data:\n${lastSensorInfo} \nLow Sensors:\n${lastLowSensorInfo}`;
+			messenger.sendEmail('Battery low', emailContent);
+			logger.debug('Battery low sending email:', emailContent);
 		}
 	}
 
