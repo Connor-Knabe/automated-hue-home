@@ -5,14 +5,7 @@ var lastSensor = null;
 module.exports = async function(logger,hue) {
 	const messenger = require('./messenger.js')(logger);
 
-	setTimeout(async ()=>{
-		await sendSensorEmail();
-	},25000);
-	setTimeout(async ()=>{
-		await sendSensorEmail();
-	},30000);
-
-	async function sendSensorEmail(){
+	async function sendLowBatterySensorEmail(){
 		var sensorData = await hue.getSensorData();
 		var sendBatteryLowEmail = false;
 		var lowSensorInfo = "";
@@ -22,7 +15,6 @@ module.exports = async function(logger,hue) {
 
 		sensorData.forEach(sensor => {
 			sensorInfo += `${sensor.name} is at ${sensor.battery}%\n`;
-
 			if(sensor.battery < options.batteryPercentWarning){
 				lowSensorInfo += `${sensor.name} is at ${sensor.battery}%\n`;
 				sendBatteryLowEmail = true;
@@ -51,7 +43,7 @@ module.exports = async function(logger,hue) {
     var job = new CronJob(
 		'5 5 * * 3',
 		async function () {
-			await sendSensorEmail();
+			await sendLowBatterySensorEmail();
 		},
 		null,
 		true,
